@@ -22,6 +22,7 @@
 
 </head>
 
+
 <body>
 
 <!-- ================================
@@ -68,6 +69,23 @@
                         <a class="nav-link active" th:href="@{/pedidos}">
                             Pedidos
                         </a>
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link active" th:href="@{/pedidos}">
+
+                            <i class="fas fa-shopping-cart"></i>
+
+                            Carrinho
+
+                            <span id="contadorCarrinho"
+                                  class="badge bg-light text-dark">
+            0
+        </span>
+
+                        </a>
+
                     </li>
 
                 </ul>
@@ -336,16 +354,82 @@
                      RESUMO DO PEDIDO
                      ================================ -->
 
+                <!-- ================================
+       RESUMO DO PEDIDO
+       ================================ -->
+
                 <div class="col-lg-5">
 
                     <div class="pedido-card resumo-card">
 
                         <h3 class="pedido-title">
-
                             <i class="fas fa-shopping-cart"></i>
                             Resumo do Pedido
-
                         </h3>
+
+                        <!-- PRODUTOS DO CARRINHO -->
+                        <div id="listaCarrinho">
+
+                            <p class="text-center">
+                                Seu carrinho está vazio.
+                            </p>
+
+                        </div>
+
+                        <hr>
+
+                        <!-- SUBTOTAL -->
+                        <div class="valor-linha">
+
+            <span>
+                Subtotal
+            </span>
+
+                            <strong id="subtotal">
+                                R$ 0,00
+                            </strong>
+
+                        </div>
+
+                        <!-- TAXA DE ENTREGA -->
+                        <div class="valor-linha">
+
+            <span>
+                Taxa de entrega
+            </span>
+
+                            <strong id="taxaEntrega">
+                                R$ 0,00
+                            </strong>
+
+                        </div>
+
+                        <hr>
+
+                        <!-- TOTAL -->
+                        <div class="total-pedido">
+
+            <span>
+                Total
+            </span>
+
+                            <strong id="total">
+                                R$ 0,00
+                            </strong>
+
+                        </div>
+
+                        <div class="pedido-info">
+
+                            <i class="fas fa-heart"></i>
+
+                            Obrigado por escolher a LIVCOFFE!
+
+                        </div>
+
+                    </div>
+
+                </div>
 
 
                         <!-- PRODUTO 1 -->
@@ -457,28 +541,78 @@
 
                         <div class="total-pedido">
 
-                            <span>
-                                Total
-                            </span>
+                            <div class="col-lg-5">
 
-                            <strong>
-                                R$ 37,00
-                            </strong>
+                                <div class="pedido-card resumo-card">
 
-                        </div>
+                                    <h3 class="pedido-title">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        Resumo do Pedido
+                                    </h3>
 
+                                    <!-- PRODUTOS DO CARRINHO -->
+                                    <div id="listaCarrinho">
 
-                        <div class="pedido-info">
+                                        <p class="text-center">
+                                            Seu carrinho está vazio.
+                                        </p>
 
-                            <i class="fas fa-heart"></i>
+                                    </div>
 
-                            Obrigado por escolher a LIVCOFFE!
+                                    <hr>
 
-                        </div>
+                                    <!-- SUBTOTAL -->
+                                    <div class="valor-linha">
 
-                    </div>
+            <span>
+                Subtotal
+            </span>
 
-                </div>
+                                        <strong id="subtotal">
+                                            R$ 0,00
+                                        </strong>
+
+                                    </div>
+
+                                    <!-- ENTREGA -->
+                                    <div class="valor-linha">
+
+            <span>
+                Taxa de entrega
+            </span>
+
+                                        <strong id="taxaEntrega">
+                                            R$ 0,00
+                                        </strong>
+
+                                    </div>
+
+                                    <hr>
+
+                                    <!-- TOTAL -->
+                                    <div class="total-pedido">
+
+            <span>
+                Total
+            </span>
+
+                                        <strong id="total">
+                                            R$ 0,00
+                                        </strong>
+
+                                    </div>
+
+                                    <div class="pedido-info">
+
+                                        <i class="fas fa-heart"></i>
+
+                                        Obrigado por escolher a LIVCOFFE!
+
+                                    </div>
+
+                                </div>
+
+                            </div>
 
             </div>
 
@@ -566,10 +700,312 @@
 
 
 <!-- BOOTSTRAP JS -->
+<script>
 
+    function atualizarResumo() {
+
+        let carrinho =
+            JSON.parse(localStorage.getItem("carrinho")) || [];
+
+
+        const listaCarrinho =
+            document.getElementById("listaCarrinho");
+
+
+        let subtotal = 0;
+
+
+        listaCarrinho.innerHTML = "";
+
+
+        // ================================
+        // CARRINHO VAZIO
+        // ================================
+
+        if (carrinho.length === 0) {
+
+            listaCarrinho.innerHTML = `
+                <p class="text-center">
+                    Seu carrinho está vazio.
+                </p>
+            `;
+
+        }
+
+
+        // ================================
+        // PRODUTOS
+        // ================================
+
+        else {
+
+            carrinho.forEach((produto, index) => {
+
+                let quantidade =
+                    produto.quantidade || 1;
+
+
+                let preco =
+                    Number(produto.preco);
+
+
+                let totalProduto =
+                    preco * quantidade;
+
+
+                subtotal += totalProduto;
+
+
+                listaCarrinho.innerHTML += `
+
+                    <div class="pedido-item">
+
+                        <div>
+
+                            <h5>
+                                ${produto.nome}
+                            </h5>
+
+                            <span>
+                                ${quantidade} unidade(s)
+                            </span>
+
+                        </div>
+
+
+                        <strong>
+
+                            R$
+                            ${totalProduto
+                                .toFixed(2)
+                                .replace(".", ",")}
+
+                        </strong>
+
+                    </div>
+
+                `;
+
+            });
+
+        }
+
+
+        // ================================
+        // TAXA DE ENTREGA
+        // ================================
+
+        let tipoPedido =
+            document.getElementById("tipoPedido").value;
+
+
+        let taxaEntrega = 0;
+
+
+        if (tipoPedido === "entrega") {
+
+            taxaEntrega = 5;
+
+        }
+
+
+        // ================================
+        // TOTAL
+        // ================================
+
+        let total =
+            subtotal + taxaEntrega;
+
+
+        document.getElementById("subtotal").textContent =
+            "R$ " +
+            subtotal.toFixed(2).replace(".", ",");
+
+
+        document.getElementById("taxaEntrega").textContent =
+            "R$ " +
+            taxaEntrega.toFixed(2).replace(".", ",");
+
+
+        document.getElementById("total").textContent =
+            "R$ " +
+            total.toFixed(2).replace(".", ",");
+
+
+        // ================================
+        // CONTADOR DO CARRINHO
+        // ================================
+
+        let quantidadeTotal = 0;
+
+
+        carrinho.forEach(produto => {
+
+            quantidadeTotal +=
+                produto.quantidade || 1;
+
+        });
+
+
+        const contador =
+            document.getElementById("contadorCarrinho");
+
+
+        if (contador) {
+
+            contador.textContent =
+                quantidadeTotal;
+
+        }
+
+    }
+
+
+    // ================================
+    // QUANDO A PÁGINA CARREGAR
+    // ================================
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            atualizarResumo();
+
+
+            // Atualiza a taxa quando escolher
+            // retirada ou entrega
+
+            document.getElementById("tipoPedido")
+                .addEventListener(
+                    "change",
+                    atualizarResumo
+                );
+
+        }
+    );
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwxH9J09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous">
+</script>
+
+<script>
+
+    function atualizarResumo() {
+
+        let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+        const listaCarrinho = document.getElementById("listaCarrinho");
+
+        let subtotal = 0;
+
+        listaCarrinho.innerHTML = "";
+
+
+        // CARRINHO VAZIO
+        if (carrinho.length === 0) {
+
+            listaCarrinho.innerHTML = `
+                <p class="text-center">
+                    Seu carrinho está vazio.
+                </p>
+            `;
+
+        } else {
+
+            // MOSTRA OS PRODUTOS
+            carrinho.forEach(produto => {
+
+                let quantidade = produto.quantidade || 1;
+
+                let preco = Number(produto.preco);
+
+                let totalProduto = preco * quantidade;
+
+                subtotal += totalProduto;
+
+
+                listaCarrinho.innerHTML += `
+
+                    <div class="pedido-item">
+
+                        <div>
+
+                            <h5>
+                                ${produto.nome}
+                            </h5>
+
+                            <span>
+                                ${quantidade} unidade(s)
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            R$ ${totalProduto.toFixed(2).replace(".", ",")}
+                        </strong>
+
+                    </div>
+
+                `;
+
+            });
+
+        }
+
+
+        // TAXA DE ENTREGA
+        let tipoPedido = document.getElementById("tipoPedido").value;
+
+        let taxaEntrega = 0;
+
+        if (tipoPedido === "entrega") {
+
+            taxaEntrega = 5;
+
+        }
+
+
+        // TOTAL
+        let total = subtotal + taxaEntrega;
+
+
+        // MOSTRA OS VALORES
+        document.getElementById("subtotal").textContent =
+            "R$ " + subtotal.toFixed(2).replace(".", ",");
+
+        document.getElementById("taxaEntrega").textContent =
+            "R$ " + taxaEntrega.toFixed(2).replace(".", ",");
+
+        document.getElementById("total").textContent =
+            "R$ " + total.toFixed(2).replace(".", ",");
+
+    }
+
+
+    // QUANDO A PÁGINA CARREGAR
+    document.addEventListener("DOMContentLoaded", function() {
+
+        atualizarResumo();
+
+
+        // ALTEROU RETIRADA / ENTREGA
+        document.getElementById("tipoPedido").addEventListener(
+            "change",
+            atualizarResumo
+        );
+
+    });
+
+</script>
+
+</body>
+</html>
 </script>
 
 </body>

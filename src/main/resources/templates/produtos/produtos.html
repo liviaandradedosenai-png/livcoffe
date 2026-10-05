@@ -75,6 +75,14 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pedidos">
+                            <i class="fas fa-shopping-cart"></i>
+                            Carrinho
+                            <span id="contadorCarrinho" class="badge bg-light text-dark">0</span>
+                        </a>
+                    </li>
+
                 </ul>
 
             </div>
@@ -1102,7 +1110,141 @@
 <!-- ================================
      BOOTSTRAP JAVASCRIPT
      ================================ -->
+<script>
 
+    // ================================
+    // CARRINHO
+    // ================================
+
+    let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+
+    // ================================
+    // ATUALIZAR CONTADOR
+    // ================================
+
+    function atualizarContadorCarrinho() {
+
+        let quantidadeTotal = 0;
+
+        carrinho.forEach(produto => {
+
+            quantidadeTotal += produto.quantidade || 1;
+
+        });
+
+        const contador = document.getElementById("contadorCarrinho");
+
+        if (contador) {
+
+            contador.textContent = quantidadeTotal;
+
+        }
+
+    }
+
+
+    // ================================
+    // ADICIONAR PRODUTO
+    // ================================
+
+    function adicionarAoCarrinho(nome, preco) {
+
+        // Procura se o produto já existe
+        let produtoExistente = carrinho.find(
+            produto => produto.nome === nome
+        );
+
+
+        if (produtoExistente) {
+
+            // Se já existe, aumenta a quantidade
+            produtoExistente.quantidade++;
+
+        } else {
+
+            // Se não existe, adiciona
+            carrinho.push({
+
+                nome: nome,
+
+                preco: preco,
+
+                quantidade: 1
+
+            });
+
+        }
+
+
+        // Salva no navegador
+        localStorage.setItem(
+            "carrinho",
+            JSON.stringify(carrinho)
+        );
+
+
+        // Atualiza o número do carrinho
+        atualizarContadorCarrinho();
+
+
+        // Mensagem
+        alert(nome + " foi adicionado ao carrinho! 🩷");
+
+    }
+
+
+    // ================================
+    // PEGAR TODOS OS BOTÕES
+    // ================================
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const botoes = document.querySelectorAll(
+            ".coffee-card .btn-coffee"
+        );
+
+
+        botoes.forEach(botao => {
+
+            botao.addEventListener("click", function() {
+
+                const card = botao.closest(".coffee-card");
+
+
+                const nome = card.querySelector(
+                    ".card-title"
+                ).textContent.trim();
+
+
+                const precoTexto = card.querySelector(
+                    ".price"
+                ).textContent.trim();
+
+
+                // Converte R$ 7,50 para 7.50
+                const preco = Number(
+                    precoTexto
+                        .replace("R$", "")
+                        .replace(".", "")
+                        .replace(",", ".")
+                        .trim()
+                );
+
+
+                adicionarAoCarrinho(nome, preco);
+
+            });
+
+        });
+
+
+        // Atualiza o contador quando abrir a página
+        atualizarContadorCarrinho();
+
+    });
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous">
