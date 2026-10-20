@@ -348,13 +348,13 @@ body {
         var(--rosa-forte)
     );
     color: var(--preto);
-    padding: 55px 0 20px;
+    padding: 10px  0px;
 }
 
 .footer-section h5 {
     font-family: 'Playfair Display', serif;
     font-size: 1.3rem;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
 }
 
 .footer-section p {
@@ -406,6 +406,7 @@ body {
 
 .footer-section hr {
     border-color: rgba(0, 0, 0, 0.15);
+    display:none;
 }
 
 /* ================================

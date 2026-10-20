@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LIVCOFFE - Painel Administrativo</title>
+
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}">
+
+    <!-- FAVICON -->
+    <link rel="icon"
+          type="image/png"
+          th:href="@{/img/favicon.png}">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+     ===================================================== -->
+
+<header>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-coffee">
+
+        <div class="container-fluid">
+
+            <a class="navbar-brand" th:href="@{/admin}">
+
+                <i class="fas fa-mug-hot"></i>
+
+                LIVCOFFE | ADMIN
+
+            </a>
+
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarAdmin">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+
+            <div class="collapse navbar-collapse"
+                 id="navbarAdmin">
+
+                <ul class="navbar-nav ms-auto">
+
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           th:href="@{/}">
+
+                            <i class="fas fa-home"></i>
+
+                            Site
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           th:href="@{/produtos}">
+
+                            <i class="fas fa-coffee"></i>
+
+                            Produtos
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           th:href="@{/pedidos}">
+
+                            <i class="fas fa-shopping-cart"></i>
+
+                            Pedidos
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<!-- =====================================================
+     CABEÇALHO
+     ===================================================== -->
+
+<main>
+
+    <section class="admin-header">
+
+        <div class="container">
+
+            <div class="d-flex justify-content-between
+                        align-items-center flex-wrap">
+
+                <div>
+
+                    <span class="admin-subtitle">
+                        PAINEL DE CONTROLE
+                    </span>
+
+                    <h1>
+                        Olá, Administrador! 🩷
+                    </h1>
+
+                    <p>
+                        Acompanhe e gerencie os pedidos da LIVCOFFE.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-date">
+
+                    <i class="fas fa-calendar-day"></i>
+
+                    <span th:text="${dataAtual}">
+                        06/10/2026
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         RESUMO
+         ================================================= -->
+
+    <section class="admin-dashboard">
+
+        <div class="container">
+
+            <div class="row g-4">
+
+
+                <!-- PEDIDOS FEITOS -->
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon pedidos">
+
+                            <i class="fas fa-receipt"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Pedidos Feitos
+                            </span>
+
+                            <h2 th:text="${totalFeitos}">
+                                0
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EM ANDAMENTO -->
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon andamento">
+
+                            <i class="fas fa-clock"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Em Andamento
+                            </span>
+
+                            <h2 th:text="${totalAndamento}">
+                                0
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONCLUÍDOS -->
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon concluidos">
+
+                            <i class="fas fa-check"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Concluídos
+                            </span>
+
+                            <h2 th:text="${totalConcluidos}">
+                                0
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ENTREGUES -->
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon entregues">
+
+                            <i class="fas fa-truck"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Entregues
+                            </span>
+
+                            <h2 th:text="${totalEntregues}">
+                                0
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         PEDIDOS
+         ================================================= -->
+
+    <section class="admin-orders">
+
+        <div class="container">
+
+
+            <div class="d-flex justify-content-between
+                        align-items-center flex-wrap mb-4">
+
+                <div>
+
+                    <span class="admin-subtitle">
+                        GERENCIAMENTO
+                    </span>
+
+                    <h2 class="section-title">
+                        Pedidos
+                    </h2>
+
+                </div>
+
+
+                <button class="btn btn-coffee"
+                        onclick="location.reload()">
+
+                    <i class="fas fa-sync-alt"></i>
+
+                    Atualizar
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 TABS
+                 ================================================= -->
+
+            <ul class="nav nav-pills admin-tabs mb-4"
+                id="pedidosTabs"
+                role="tablist">
+
+
+                <!-- FEITOS -->
+
+                <li class="nav-item"
+                    role="presentation">
+
+                    <button class="nav-link active"
+                            data-bs-toggle="pill"
+                            data-bs-target="#feitos"
+                            type="button">
+
+                        <i class="fas fa-receipt"></i>
+
+                        Feitos
+
+                        <span class="badge"
+                              th:text="${totalFeitos}">
+                            0
+                        </span>
+
+                    </button>
+
+                </li>
+
+
+                <!-- ANDAMENTO -->
+
+                <li class="nav-item"
+                    role="presentation">
+
+                    <button class="nav-link"
+                            data-bs-toggle="pill"
+                            data-bs-target="#andamento"
+                            type="button">
+
+                        <i class="fas fa-clock"></i>
+
+                        Em andamento
+
+                        <span class="badge"
+                              th:text="${totalAndamento}">
+                            0
+                        </span>
+
+                    </button>
+
+                </li>
+
+
+                <!-- CONCLUÍDOS -->
+
+                <li class="nav-item"
+                    role="presentation">
+
+                    <button class="nav-link"
+                            data-bs-toggle="pill"
+                            data-bs-target="#concluidos"
+                            type="button">
+
+                        <i class="fas fa-check-circle"></i>
+
+                        Concluídos
+
+                        <span class="badge"
+                              th:text="${totalConcluidos}">
+                            0
+                        </span>
+
+                    </button>
+
+                </li>
+
+
+                <!-- ENTREGUES -->
+
+                <li class="nav-item"
+                    role="presentation">
+
+                    <button class="nav-link"
+                            data-bs-toggle="pill"
+                            data-bs-target="#entregues"
+                            type="button">
+
+                        <i class="fas fa-truck"></i>
+
+                        Entregues
+
+                        <span class="badge"
+                              th:text="${totalEntregues}">
+                            0
+                        </span>
+
+                    </button>
+
+                </li>
+
+            </ul>
+
+
+
+            <!-- =================================================
+                 CONTEÚDO DAS TABS
+                 ================================================= -->
+
+            <div class="tab-content">
+
+
+                <!-- =================================================
+                     PEDIDOS FEITOS
+                     ================================================= -->
+
+                <div class="tab-pane fade show active"
+                     id="feitos">
+
+                    <div class="orders-container">
+
+
+                        <!-- PEDIDO -->
+
+                        <div class="admin-order-card"
+                             th:each="pedido : ${pedidosFeitos}">
+
+
+                            <div class="order-header">
+
+                                <div>
+
+                                    <span class="order-number"
+                                          th:text="'Pedido #' + ${pedido.id}">
+                                        Pedido #001
+                                    </span>
+
+                                    <span class="order-date"
+                                          th:text="${pedido.data}">
+                                        06/10/2026 14:00
+                                    </span>
+
+                                </div>
+
+
+                                <span class="status-badge status-feito">
+
+                                    <i class="fas fa-receipt"></i>
+
+                                    Feito
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-body">
+
+
+                                <div class="order-info">
+
+                                    <h5>
+
+                                        <i class="fas fa-user"></i>
+
+                                        <span th:text="${pedido.cliente}">
+                                            Cliente
+                                        </span>
+
+                                    </h5>
+
+
+                                    <p>
+
+                                        <i class="fas fa-map-marker-alt"></i>
+
+                                        <span th:text="${pedido.tipoPedido}">
+                                            Retirada
+                                        </span>
+
+                                    </p>
+
+                                </div>
+
+
+                                <div class="order-products">
+
+                                    <p th:each="item : ${pedido.itens}">
+
+                                        <span th:text="${item.quantidade + 'x ' + item.nome}">
+                                            2x Cappuccino
+                                        </span>
+
+                                        <strong
+                                                th:text="${'R$ ' + item.preco}">
+                                            R$ 15,00
+                                        </strong>
+
+                                    </p>
+
+                                </div>
+
+
+                                <div class="order-total">
+
+                                    <span>
+                                        Total
+                                    </span>
+
+                                    <strong
+                                            th:text="${'R$ ' + pedido.total}">
+                                        R$ 30,00
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="order-footer">
+
+                                <form th:action="@{/admin/pedido/andamento/{id}(id=${pedido.id})}"
+                                      method="post">
+
+                                    <button type="submit"
+                                            class="btn btn-coffee">
+
+                                        <i class="fas fa-play"></i>
+
+                                        Iniciar pedido
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SEM PEDIDOS -->
+
+                        <div class="empty-orders"
+                             th:if="${pedidosFeitos == null or #lists.isEmpty(pedidosFeitos)}">
+
+                            <i class="fas fa-mug-hot"></i>
+
+                            <h4>
+                                Nenhum pedido novo
+                            </h4>
+
+                            <p>
+                                Quando chegar um pedido, ele aparecerá aqui.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     EM ANDAMENTO
+                     ================================================= -->
+
+                <div class="tab-pane fade"
+                     id="andamento">
+
+                    <div class="orders-container">
+
+                        <div class="admin-order-card"
+                             th:each="pedido : ${pedidosAndamento}">
+
+                            <div class="order-header">
+
+                                <div>
+
+                                    <span class="order-number"
+                                          th:text="'Pedido #' + ${pedido.id}">
+                                        Pedido #002
+                                    </span>
+
+                                    <span class="order-date"
+                                          th:text="${pedido.data}">
+                                        06/10/2026 14:10
+                                    </span>
+
+                                </div>
+
+
+                                <span class="status-badge status-andamento">
+
+                                    <i class="fas fa-clock"></i>
+
+                                    Em andamento
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-body">
+
+                                <div class="order-info">
+
+                                    <h5>
+
+                                        <i class="fas fa-user"></i>
+
+                                        <span th:text="${pedido.cliente}">
+                                            Cliente
+                                        </span>
+
+                                    </h5>
+
+                                    <p>
+
+                                        <i class="fas fa-shopping-bag"></i>
+
+                                        <span th:text="${pedido.tipoPedido}">
+                                            Retirada
+                                        </span>
+
+                                    </p>
+
+                                </div>
+
+
+                                <div class="order-products">
+
+                                    <p th:each="item : ${pedido.itens}">
+
+                                        <span th:text="${item.quantidade + 'x ' + item.nome}">
+                                            1x Milkshake
+                                        </span>
+
+                                        <strong
+                                                th:text="${'R$ ' + item.preco}">
+                                            R$ 15,00
+                                        </strong>
+
+                                    </p>
+
+                                </div>
+
+
+                                <div class="order-total">
+
+                                    <span>
+                                        Total
+                                    </span>
+
+                                    <strong
+                                            th:text="${'R$ ' + pedido.total}">
+                                        R$ 15,00
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="order-footer">
+
+                                <form th:action="@{/admin/pedido/concluir/{id}(id=${pedido.id})}"
+                                      method="post">
+
+                                    <button type="submit"
+                                            class="btn btn-success">
+
+                                        <i class="fas fa-check"></i>
+
+                                        Concluir pedido
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="empty-orders"
+                             th:if="${pedidosAndamento == null or #lists.isEmpty(pedidosAndamento)}">
+
+                            <i class="fas fa-clock"></i>
+
+                            <h4>
+                                Nenhum pedido em andamento
+                            </h4>
+
+                            <p>
+                                Os pedidos em preparo aparecerão aqui.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CONCLUÍDOS
+                     ================================================= -->
+
+                <div class="tab-pane fade"
+                     id="concluidos">
+
+                    <div class="orders-container">
+
+                        <div class="admin-order-card"
+                             th:each="pedido : ${pedidosConcluidos}">
+
+                            <div class="order-header">
+
+                                <div>
+
+                                    <span class="order-number"
+                                          th:text="'Pedido #' + ${pedido.id}">
+                                        Pedido #003
+                                    </span>
+
+                                    <span class="order-date"
+                                          th:text="${pedido.data}">
+                                        06/10/2026
+                                    </span>
+
+                                </div>
+
+
+                                <span class="status-badge status-concluido">
+
+                                    <i class="fas fa-check-circle"></i>
+
+                                    Concluído
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-body">
+
+                                <div class="order-info">
+
+                                    <h5>
+
+                                        <i class="fas fa-user"></i>
+
+                                        <span th:text="${pedido.cliente}">
+                                            Cliente
+                                        </span>
+
+                                    </h5>
+
+                                </div>
+
+
+                                <div class="order-total">
+
+                                    <span>
+                                        Total
+                                    </span>
+
+                                    <strong
+                                            th:text="${'R$ ' + pedido.total}">
+                                        R$ 25,00
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="order-footer">
+
+                                <form th:action="@{/admin/pedido/entregar/{id}(id=${pedido.id})}"
+                                      method="post">
+
+                                    <button type="submit"
+                                            class="btn btn-coffee">
+
+                                        <i class="fas fa-truck"></i>
+
+                                        Marcar como entregue
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="empty-orders"
+                             th:if="${pedidosConcluidos == null or #lists.isEmpty(pedidosConcluidos)}">
+
+                            <i class="fas fa-check-circle"></i>
+
+                            <h4>
+                                Nenhum pedido concluído
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ENTREGUES
+                     ================================================= -->
+
+                <div class="tab-pane fade"
+                     id="entregues">
+
+                    <div class="orders-container">
+
+                        <div class="admin-order-card"
+                             th:each="pedido : ${pedidosEntregues}">
+
+                            <div class="order-header">
+
+                                <div>
+
+                                    <span class="order-number"
+                                          th:text="'Pedido #' + ${pedido.id}">
+                                        Pedido #004
+                                    </span>
+
+                                    <span class="order-date"
+                                          th:text="${pedido.data}">
+                                        06/10/2026
+                                    </span>
+
+                                </div>
+
+
+                                <span class="status-badge status-entregue">
+
+                                    <i class="fas fa-check-double"></i>
+
+                                    Entregue
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-body">
+
+                                <div class="order-info">
+
+                                    <h5>
+
+                                        <i class="fas fa-user"></i>
+
+                                        <span th:text="${pedido.cliente}">
+                                            Cliente
+                                        </span>
+
+                                    </h5>
+
+                                </div>
+
+
+                                <div class="order-total">
+
+                                    <span>
+                                        Total
+                                    </span>
+
+                                    <strong
+                                            th:text="${'R$ ' + pedido.total}">
+                                        R$ 40,00
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="empty-orders"
+                             th:if="${pedidosEntregues == null or #lists.isEmpty(pedidosEntregues)}">
+
+                            <i class="fas fa-truck"></i>
+
+                            <h4>
+                                Nenhum pedido entregue
+                            </h4>
+
+                            <p>
+                                Os pedidos finalizados aparecerão aqui.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+<footer class="footer-section">
+
+    <div class="container">
+
+        <div class="text-center">
+
+            <p>
+                &copy; 2026 LIVCOFFE.
+                Painel Administrativo.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+<!-- BOOTSTRAP JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>
